@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/menu_name_1">
+        <menu>
+            <item
+                android:id="@+id/mnuNew"
+                android:title="@string/menu_name_2" />
+            <item
+                android:id="@+id/mnuOpen"
+                android:title="@string/menu_name_3" />
+            <item
+                android:id="@+id/mnuSave"
+                android:title="@string/menu_name_4" />
+            <item
+                android:id="@+id/mnuSaveAs"
+                android:title="@string/menu_name_5" />
+        </menu>
+    </item>
+</menu>
