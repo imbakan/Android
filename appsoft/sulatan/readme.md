@@ -1,1 +1,1 @@
-![Screenshot](sulatan.jpg = 100x100)
+![Screenshot](sulatan.jpg =100x100)
