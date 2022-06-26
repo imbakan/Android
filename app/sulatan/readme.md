@@ -1,1 +1,1 @@
-![](sulatan.jpg)
+![](sulatan.png)
