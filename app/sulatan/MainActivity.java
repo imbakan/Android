@@ -3,14 +3,19 @@
 package balikbayan.box.sulatan;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +33,9 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int REQUEST_ALL_FILES_ACCESS_CODE =  9901;
+    private final int REQUEST_EXTERNAL_STORAGE_CODE = 9902;
+
     private View view1 = null;
     private String pathname, filename;
 
@@ -40,35 +48,79 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // tanungin ang user kung iaallow na maaccess ang storage
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1001);
-            return;
-        }
-
         // remove underline      attributes background     @android:color/transparent
         // move to first line    attributes gravity        top
         editText1 = findViewById(R.id.editText1);
 
-        // iopen ang pinakabagong file
-        newfile = false;
-        pathname = getExternalDrive() + "/aklatan/sulatan";
-        File file = getLatestFile(pathname);
-        filename = file.getName();
-        String[] str = new String[1];
-        open(file, str);
-        editText1.setText(str[0]);
+        // tanungin ang user kung iaallow na maaccess ang storage
+        // ito ay para lang sa Allow access to media only
+        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE_CODE);
 
-        // ilagay ang filename sa title bar
-        String app_name =  getResources().getString(R.string.app_name);
-        setTitle(app_name + " - " + filename);
+            Log.d("KLGYN", "REQUEST PERMISSION");
+
+            return;
+        }
+
+        // aalamin nito kung nakaenable ang Allow management of all files
+        // kung hindi ioopen nito ang dialog
+        // ito ay hindi mabablock kaya ang line kasunod nito ay maeexecute
+        if (Environment.isExternalStorageManager()) {
+
+            Log.d("KLGYN", "PERMISSION GRANTED");
+
+            newfile = false;
+
+            pathname = getExternalDrive() + "/mga_data/sulatan";
+            File file = getLatestFile(pathname);
+            filename = file.getName();
+            String[] str = new String[1];
+            open(file, str);
+
+            editText1.setText(str[0]);
+
+            // ilagay ang filename sa title bar
+            String app_name =  getResources().getString(R.string.app_name);
+            setTitle(app_name + " - " + filename);
+
+        } else {
+            Log.d("KLGYN", "PERMISSION DENIED");
+
+            openDialog();
+        }
     }
 
+    // ang sagot ng user sa opendialog
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_ALL_FILES_ACCESS_CODE) {
+
+            // ang value ng resultCode ay laging RESULT_CANCEL kaya ito ang ginamit ko
+            if (Environment.isExternalStorageManager())
+                Log.d("KLGYN", "ACTIVITY RESULT OK");
+            else
+                Log.d("KLGYN", "ACTIVITY RESULT CANCEL");
+
+        }
+    }
+
+    // ang sagot ng user sa checkSelfPermission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if(requestCode == REQUEST_EXTERNAL_STORAGE_CODE) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("KLGYN", "REQUEST GRANTED");
 
+                openDialog();
+
+            } else {
+                Log.d("KLGYN", "REQUEST DENIED");
+            }
+        }
     }
 
     @Override
@@ -243,6 +295,14 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
+    }
+
+    // allow all files access dialog
+    private void openDialog() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, REQUEST_ALL_FILES_ACCESS_CODE);
     }
 
     // kunin ang pathname ng external sd card
