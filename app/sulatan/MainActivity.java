@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editText1;
 
-    private boolean newfile;
+    private boolean newfile, enable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d("KLGYN", "PERMISSION GRANTED");
 
-            newfile = false;
-
-            pathname = getExternalDrive() + "/mga_data/sulatan";
-            File file = getLatestFile(pathname);
-            filename = file.getName();
-            String[] str = new String[1];
-            open(file, str);
-
-            editText1.setText(str[0]);
-
-            // ilagay ang filename sa title bar
-            String app_name =  getResources().getString(R.string.app_name);
-            setTitle(app_name + " - " + filename);
+            openDefaultFile();
 
         } else {
             Log.d("KLGYN", "PERMISSION DENIED");
@@ -90,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ang sagot ng user sa opendialog
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -98,15 +85,19 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_ALL_FILES_ACCESS_CODE) {
 
             // ang value ng resultCode ay laging RESULT_CANCEL kaya ito ang ginamit ko
-            if (Environment.isExternalStorageManager())
+            if (Environment.isExternalStorageManager()) {
                 Log.d("KLGYN", "ACTIVITY RESULT OK");
-            else
+
+                openDefaultFile();
+
+            } else {
                 Log.d("KLGYN", "ACTIVITY RESULT CANCEL");
 
+                enable = false;
+            }
         }
     }
 
-    // ang sagot ng user sa checkSelfPermission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -114,11 +105,14 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_EXTERNAL_STORAGE_CODE) {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("KLGYN", "REQUEST GRANTED");
+                Log.d("KLGYN", "OPEN ACTIVITY");
 
                 openDialog();
 
             } else {
                 Log.d("KLGYN", "REQUEST DENIED");
+
+                enable = false;
             }
         }
     }
@@ -131,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
+        menu.findItem(R.id.mnuNew).setEnabled(enable);
+        menu.findItem(R.id.mnuOpen).setEnabled(enable);
+        menu.findItem(R.id.mnuSave).setEnabled(enable);
+        menu.findItem(R.id.mnuSaveAs).setEnabled(enable);
+        menu.findItem(R.id.mnuDelete).setEnabled(enable);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -266,8 +267,8 @@ public class MainActivity extends AppCompatActivity {
     private void onToolsDelete() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete File");
-        builder.setMessage("Delete " + filename + " file?");
+        builder.setTitle("Confirm Deletion");
+        builder.setMessage("Are you sure you want to permanently delete " + filename + " file?");
 
         // yes button
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
@@ -303,6 +304,26 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
         startActivityForResult(intent, REQUEST_ALL_FILES_ACCESS_CODE);
+    }
+
+    //
+    private void openDefaultFile() {
+
+        newfile = false;
+        enable = true;
+
+        pathname = getExternalDrive() + "/mga_data/sulatan";
+        File file = getLatestFile(pathname);
+        filename = file.getName();
+        String[] str = new String[1];
+        open(file, str);
+
+        editText1.setText(str[0]);
+
+        // ilagay ang filename sa title bar
+        String app_name =  getResources().getString(R.string.app_name);
+        setTitle(app_name + " - " + filename);
+
     }
 
     // kunin ang pathname ng external sd card
