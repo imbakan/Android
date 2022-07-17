@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/menu_name_1">
+
+    <item android:title="@string/menu_name1">
         <menu>
-            <item
-                android:id="@+id/mnuNew"
-                android:title="@string/menu_name_2" />
             <item
                 android:id="@+id/mnuOpen"
-                android:title="@string/menu_name_3" />
+                android:title="@string/menu_name2" />
             <item
                 android:id="@+id/mnuSave"
-                android:title="@string/menu_name_4" />
+                android:title="@string/menu_name3" />
             <item
                 android:id="@+id/mnuSaveAs"
-                android:title="@string/menu_name_5" />
+                android:title="@string/menu_name4" />
         </menu>
     </item>
-    <item android:title="@string/menu_name_6">
+    <item android:title="@string/menu_name5">
         <menu>
             <item
-                android:id="@+id/mnuDelete"
-                android:title="@string/menu_name_7" />
+                android:id="@+id/mnuUndo"
+                android:title="@string/menu_name6" />
+            <item
+                android:id="@+id/mnuClear"
+                android:title="@string/menu_name7" />
+        </menu>
+    </item>
+    <item android:title="@string/menu_name8">
+        <menu>
+            <item
+                android:id="@+id/mnuLight"
+                android:title="@string/menu_name9" />
+            <item
+                android:id="@+id/mnuHeavy"
+                android:title="@string/menu_name10" />
         </menu>
     </item>
 </menu>
