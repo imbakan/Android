@@ -1,10 +1,13 @@
 <resources>
-    <string name="app_name">Sulatan</string>
-    <string name="menu_name_1">File</string>
-    <string name="menu_name_2">New</string>
-    <string name="menu_name_3">Open ...</string>
-    <string name="menu_name_4">Save</string>
-    <string name="menu_name_5">Save As ...</string>
-    <string name="menu_name_6">Tools</string>
-    <string name="menu_name_7">Delete ...</string>
+    <string name="app_name">Sulat Kamay</string>
+    <string name="menu_name1">File</string>
+    <string name="menu_name2">Open ...</string>
+    <string name="menu_name3">Save</string>
+    <string name="menu_name4">Save As ...</string>
+    <string name="menu_name5">Edit</string>
+    <string name="menu_name6">Undo</string>
+    <string name="menu_name7">Clear</string>
+    <string name="menu_name8">Tools</string>
+    <string name="menu_name9">Light Pen</string>
+    <string name="menu_name10">Heavy Pen</string>
 </resources>
