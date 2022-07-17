@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Sulatan</string>
+    <string name="menu_name_1">File</string>
+    <string name="menu_name_2">New</string>
+    <string name="menu_name_3">Open ...</string>
+    <string name="menu_name_4">Save</string>
+    <string name="menu_name_5">Save As ...</string>
+    <string name="menu_name_6">Tools</string>
+    <string name="menu_name_7">Delete ...</string>
+</resources>
