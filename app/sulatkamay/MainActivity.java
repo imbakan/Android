@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,28 +55,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onFileSaveAs() {
-
+        view.save();
     }
 
     private void onEditUndo() {
-
+        view.delete();
     }
 
     private void onEditClear() {
-
+        view.clear();
     }
 
     private void onToolsLightPen() {
-
+        view.setPenSize(7.0f);
     }
 
     private void onToolsHeavyPen() {
-
+        view.setPenSize(15.0f);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-    }
 
+        if (hasFocus) {
+        View decorview = getWindow().getDecorView();
+        decorview.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
 }
